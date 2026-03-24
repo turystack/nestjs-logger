@@ -1,0 +1,3 @@
+export const LOGGER_ADAPTER = Symbol('LOGGER_ADAPTER')
+
+export const LOGGER_ADAPTER_PINO_ES = Symbol('LOGGER_ADAPTER_PINO_ES')
