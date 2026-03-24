@@ -1,14 +1,12 @@
 export interface LogMetadata {
-  [key: string]: unknown
+	[key: string]: unknown
 }
 
 export type LoggerModuleOptions = {
-  adapter: 'elasticsearch'
-  elasticsearch: {
-    cloudId?: string
-    node?: string
-    password?: string
-    username?: string
-  }
-  level?: 'debug' | 'error' | 'info' | 'warn'
+	adapter: 'elasticsearch'
+	elasticsearch: {
+		apiKey?: string
+		node: string
+	}
+	level?: 'debug' | 'error' | 'info' | 'warn'
 }
