@@ -6,7 +6,10 @@ export type LoggerModuleOptions = {
 	adapter: 'elasticsearch'
 	elasticsearch: {
 		apiKey?: string
-		node: string
+		cloudId?: string
+		node?: string
+		password?: string
+		username?: string
 	}
 	level?: 'debug' | 'error' | 'info' | 'warn'
 }

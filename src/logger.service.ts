@@ -2,6 +2,7 @@ import { ConsoleLogger, Inject, Injectable, Optional } from '@nestjs/common'
 
 import type { ILoggerAdapter } from '@/logger.adapter.interface.js'
 import { LOGGER_ADAPTER } from '@/logger.constants.js'
+import { withLogContext } from '@/logger.context.js'
 
 @Injectable()
 export class LoggerService extends ConsoleLogger {
@@ -21,13 +22,15 @@ export class LoggerService extends ConsoleLogger {
 	}
 
 	debug(message: string, args?: unknown): void {
-		super.debug(message, args)
-		this._adapter?.debug(message, args)
+		const enriched = withLogContext(args)
+		super.debug(message, enriched)
+		this._adapter?.debug(message, enriched)
 	}
 
 	error(message: string, args?: unknown): void {
-		super.error(message, args)
-		this._adapter?.error(message, args)
+		const enriched = withLogContext(args)
+		super.error(message, enriched)
+		this._adapter?.error(message, enriched)
 	}
 
 	info(message: string, args?: unknown): void {
@@ -35,12 +38,14 @@ export class LoggerService extends ConsoleLogger {
 	}
 
 	log(message: string, args?: unknown): void {
-		super.log(message, args)
-		this._adapter?.info(message, args)
+		const enriched = withLogContext(args)
+		super.log(message, enriched)
+		this._adapter?.info(message, enriched)
 	}
 
 	warn(message: string, args?: unknown): void {
-		super.warn(message, args)
-		this._adapter?.warn(message, args)
+		const enriched = withLogContext(args)
+		super.warn(message, enriched)
+		this._adapter?.warn(message, enriched)
 	}
 }

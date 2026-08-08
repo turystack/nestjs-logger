@@ -1,17 +1,41 @@
 import type { Provider } from '@nestjs/common'
 import pino from 'pino'
 
-import { LOGGER_ADAPTER, LOGGER_ADAPTER_PINO_ES } from '@/logger.constants.js'
+import {
+	LOGGER_ADAPTER,
+	LOGGER_ADAPTER_PINO_ES,
+	LOGGER_MODULE_OPTIONS,
+} from '@/logger.constants.js'
 import type { LoggerModuleOptions } from '@/logger.types.js'
 
 import { PinoEsAdapter } from '@/pino-es/pino-es.adapter.js'
 
+const resolveAuth = (elasticsearch: LoggerModuleOptions['elasticsearch']) => {
+	if (elasticsearch.apiKey) {
+		return {
+			apiKey: elasticsearch.apiKey,
+		}
+	}
+
+	if (elasticsearch.username && elasticsearch.password) {
+		return {
+			password: elasticsearch.password,
+			username: elasticsearch.username,
+		}
+	}
+
+	return undefined
+}
+
 export class PinoElasticsearchModule {
-	static createProviders(options: LoggerModuleOptions): Provider[] {
+	static createProviders(): Provider[] {
 		return [
 			{
+				inject: [
+					LOGGER_MODULE_OPTIONS,
+				],
 				provide: LOGGER_ADAPTER_PINO_ES,
-				useFactory: () => {
+				useFactory: (options: LoggerModuleOptions) => {
 					return pino({
 						level: options.level ?? 'info',
 						transport: {
@@ -19,9 +43,10 @@ export class PinoElasticsearchModule {
 								{
 									level: options.level ?? 'info',
 									options: {
-										auth: options.elasticsearch.apiKey
+										auth: resolveAuth(options.elasticsearch),
+										cloud: options.elasticsearch.cloudId
 											? {
-													apiKey: options.elasticsearch.apiKey,
+													id: options.elasticsearch.cloudId,
 												}
 											: undefined,
 										node: options.elasticsearch.node,
